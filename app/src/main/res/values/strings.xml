@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Signora</string>
+
+    <string name="nav_shared">Shared</string>
+    <string name="nav_resource">Resources</string>
+    <string name="nav_shader">Shaders</string>
 </resources>

@@ -1,0 +1,19 @@
+[package]
+name = "signora"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["rlib", "staticlib", "cdylib"]
+
+[dependencies]
+cgmath = "0.18"
+wgpu = "0.15"
+wgpu-hal="0.15"
+
+raw-window-handle = "0.5"
+
+android_logger = "*"
+jni = "*"
+jni_fn = "*"
+ndk = { path = "ndk" }
