@@ -11,9 +11,12 @@ cgmath = "0.18"
 wgpu = "0.15"
 wgpu-hal="0.15"
 
+bytemuck = { version = "1.13", features = ["derive"] }
+log = "0.4"
+pollster = "0.3"
 raw-window-handle = "0.5"
 
 android_logger = "*"
 jni = "*"
-jni_fn = "*"
+jni-bind = { path = "jni-bind" }
 ndk = { path = "ndk" }

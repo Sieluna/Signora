@@ -22,9 +22,9 @@ import com.shader.signora.ui.theme.SignoraTheme
 
 sealed class NavigationConfig(var route: String, var group: String? = null, @DrawableRes var icon: Int = R.drawable.ic_nav_shared, @StringRes var title: Int = R.string.nav_shared) {
     object Resources: NavigationConfig("resources", RESOURCE_KEY, R.drawable.ic_nav_resource, R.string.nav_resource)
-    object Resource: NavigationConfig("resource/{resourceId}")
+    object Resource: NavigationConfig("$RESOURCE_KEY/{resourceId}")
     object Shaders: NavigationConfig("shaders", SHADER_KEY, R.drawable.ic_nav_shader, R.string.nav_shader)
-    object Shader: NavigationConfig("shader/{shaderId}")
+    object Shader: NavigationConfig("$SHADER_KEY/{shaderId}")
 }
 
 @Composable
