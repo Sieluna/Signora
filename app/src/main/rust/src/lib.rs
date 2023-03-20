@@ -13,7 +13,7 @@ use crate::{
 };
 
 #[no_mangle]
-#[jni_bind("com.shader.signora.ui.renderer")]
+#[jni_bind("com.shader.signora.views.WGPUSurfaceView")]
 pub fn createWebGPUCanvas(env: *mut JNIEnv, _: JClass, surface: jobject, idx: jint) -> jlong {
     android_logger::init_once(Config::default().with_max_level(LevelFilter::Info));
     let canvas = WebGPUCanvas::new(SurfaceView::new(env as *mut _, surface), idx as i32);
@@ -22,28 +22,28 @@ pub fn createWebGPUCanvas(env: *mut JNIEnv, _: JClass, surface: jobject, idx: ji
 }
 
 #[no_mangle]
-#[jni_bind("com.shader.signora.ui.renderer")]
+#[jni_bind("com.shader.signora.views.WGPUSurfaceView")]
 pub fn updateWebGPUCanvas(_env: *mut JNIEnv, _: JClass, obj: jlong) {
     let obj = unsafe { &mut *(obj as *mut WebGPUCanvas) };
     obj.on_update();
 }
 
 #[no_mangle]
-#[jni_bind("com.shader.signora.ui.renderer")]
+#[jni_bind("com.shader.signora.views.WGPUSurfaceView")]
 pub fn resizeWebGPUCanvas(_env: *mut JNIEnv, _: JClass, obj: jlong) {
     let obj = unsafe { &mut *(obj as *mut WebGPUCanvas) };
     obj.resize();
 }
 
 #[no_mangle]
-#[jni_bind("com.shader.signora.ui.renderer")]
+#[jni_bind("com.shader.signora.views.WGPUSurfaceView")]
 pub fn switchRenderer(_env: *mut JNIEnv, _: JClass, obj: jlong, idx: jint) {
     let obj = unsafe { &mut *(obj as *mut WebGPUCanvas) };
     obj.switch_renderer(idx as i32);
 }
 
 #[no_mangle]
-#[jni_bind("com.shader.signora.ui.renderer")]
+#[jni_bind("com.shader.signora.views.WGPUSurfaceView")]
 pub fn dropWebGPUCanvas(_env: *mut JNIEnv, _: JClass, obj: jlong) {
     let _obj: Box<WebGPUCanvas> = unsafe { Box::from_raw(obj as *mut _) };
 }

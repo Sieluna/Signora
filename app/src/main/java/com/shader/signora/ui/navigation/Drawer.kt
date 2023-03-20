@@ -1,10 +1,15 @@
 package com.shader.signora.ui.navigation
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -36,21 +41,9 @@ fun Drawer(
                     DrawerCollapsableItem(
                         config = it,
                         children = configs[it.group]!!,
-                        selected = currentRoute == it.route,
-                        onItemClick = { config ->
-                            navController.navigate(config.route) {
-                                navController.graph.startDestinationRoute?.let { route ->
-                                    popUpTo(route) {
-                                        saveState = true
-                                    }
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                            scope.launch {
-                                scaffoldState.drawerState.close()
-                            }
-                        }
+                        scope,
+                        scaffoldState,
+                        navController
                     )
                 } else {
                     DrawerItem(

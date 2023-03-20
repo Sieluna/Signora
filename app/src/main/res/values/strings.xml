@@ -3,5 +3,9 @@
 
     <string name="nav_shared">Shared</string>
     <string name="nav_resource">Resources</string>
+    <string name="nav_texture">Textures</string>
+    <string name="nav_model">Models</string>
     <string name="nav_shader">Shaders</string>
+
+    <string name="resource_image_desc">Resource Image</string>
 </resources>

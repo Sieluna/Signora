@@ -15,8 +15,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.shader.signora.NavigationConfig
 import com.shader.signora.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun DrawerItem(
@@ -52,7 +57,7 @@ fun DrawerItem(
                 color = if (selected) MaterialTheme.colors.primary else Color.Black
             )
             Box(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.CenterEnd
             ) {
                 trailingIcon?.let { it() }
@@ -65,18 +70,30 @@ fun DrawerItem(
 fun DrawerCollapsableItem(
     config: NavigationConfig,
     children: Array<NavigationConfig>,
-    selected: Boolean,
-    onItemClick: (NavigationConfig) -> Unit
+    scope: CoroutineScope,
+    scaffoldState: ScaffoldState,
+    navController: NavController
 ) {
-    var collapsed: Boolean by remember { mutableStateOf(true) }
+    var collapsed: Boolean by remember { mutableStateOf(false) }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
-    DrawerItem(config, selected,
+    DrawerItem(config,
+        selected = children.any { currentRoute == it.route } || currentRoute == config.route,
         onItemClick = {
-            collapsed = !collapsed
-            onItemClick(it)
+            navController.navigate(it.route) {
+                navController.graph.startDestinationRoute?.let { route ->
+                    popUpTo(route) {
+                        saveState = true
+                    }
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
         },
         trailingIcon = {
             Icon(
+                modifier = Modifier.clickable { collapsed = !collapsed },
                 imageVector = Icons.Default.run { if (collapsed) KeyboardArrowLeft else KeyboardArrowDown },
                 contentDescription = "Arrow"
             )
@@ -86,7 +103,22 @@ fun DrawerCollapsableItem(
     if (!collapsed) {
         Divider()
         children.forEach {
-            DrawerItem(it, selected, onItemClick,
+            DrawerItem(it,
+                selected = currentRoute == it.route,
+                onItemClick = { config ->
+                    navController.navigate(config.route) {
+                        navController.graph.startDestinationRoute?.let { route ->
+                            popUpTo(route) {
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                    scope.launch {
+                        scaffoldState.drawerState.close()
+                    }
+                },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(R.drawable.ic_nav_shared),
@@ -119,18 +151,24 @@ private fun DrawerItemPreview() {
 @Preview
 @Composable
 private fun DrawerCollapsableItemPreview() {
+    val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Open))
+    val scope = rememberCoroutineScope()
+    val navController = rememberNavController()
+
     Column {
         DrawerCollapsableItem(
             config = NavigationConfig.Resources,
             children = arrayOf(NavigationConfig.Shaders),
-            selected = true,
-            onItemClick = {}
+            scope = scope,
+            scaffoldState = scaffoldState,
+            navController = navController
         )
         DrawerCollapsableItem(
             config = NavigationConfig.Resources,
             children = arrayOf(NavigationConfig.Shaders),
-            selected = false,
-            onItemClick = {}
+            scope = scope,
+            scaffoldState = scaffoldState,
+            navController = navController
         )
     }
 }

@@ -1,26 +1,28 @@
-package com.shader.signora
+package com.shader.signora.viewmodels
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
+import com.shader.signora.DEFAULT_KEY
+import com.shader.signora.NavigationConfig
+import com.shader.signora.RESOURCE_KEY
+import com.shader.signora.SHADER_KEY
+import com.shader.signora.data.AppDatabase
 
-const val DEFAULT_KEY = "default"
-const val RESOURCE_KEY = "resource"
-const val SHADER_KEY = "shader"
-
-class MainViewModel : ViewModel() {
+class MainViewModel(app: Application) : AndroidViewModel(app) {
     var screenTitle by mutableStateOf("master")
         private set
 
-    // no getter setter for collection
     var configs = mutableStateMapOf<String, Array<NavigationConfig>>()
         private set
 
     init {
         configs[DEFAULT_KEY] = arrayOf(NavigationConfig.Resources, NavigationConfig.Shaders)
+        configs[RESOURCE_KEY] = arrayOf(NavigationConfig.Textures, NavigationConfig.Models)
+        AppDatabase.getInstance(app)
     }
 
     fun updateScreenTitle(value: String) {

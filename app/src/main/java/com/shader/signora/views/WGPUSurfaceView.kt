@@ -1,4 +1,4 @@
-package com.shader.signora.ui.renderer
+package com.shader.signora.views
 
 import android.content.Context
 import android.graphics.Canvas
